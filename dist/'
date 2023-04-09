@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="/output.css" rel="stylesheet" />
+    <title>Web 3 Bank</title>
+  </head>
+  <body class="bg-slate-800 justify-self-center">
+    <div>
+      <div class="flex mt-20 justify-center content-center">
+        <button onclick="getBalance()" class="text-white bg-black p-5 rounded-lg m-5 w-50">
+          Get Balance
+        </button>
+        <button class="text-white bg-black p-5 rounded-lg m-5 w-50">
+          Deposite
+        </button>
+        <button class="text-white bg-black p-5 rounded-lg m-5 w-50">
+          Withdraw
+        </button>
+      </div>
+    </div>
+  </body>
+<script
+  src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"
+  type="application/javascript"
+></script>
+  <script>
+    window.ethereum.enable();
+    const  provider = new ethers.providers.Web3Provider(window.ethereum, "sepolia");
+  
+    var contractAdrress = "0xA94B284861eF484b7f4F66bD9c1cCadF5CB3B4C4";
+    var contractAbi = [
+	{
+		"inputs": [],
+		"name": "deposite",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address payable",
+				"name": "addr",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "withdraw",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getBalance",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+
+];
+    var myContract;
+    var signer;
+    provider.listAccounts().then(function (accounts) {
+      signer = provider.getSigner(accounts[0]);
+      myContract = new ethers.Contract(contractAdrress, contractAbi, signer);
+    });
+    async function getBalance() {
+      getBalanceMoney = myContract.getBalance();
+      var Balance = await getBalanceMoney;
+      console.log(Balance);
+    }
+  </script>
+</html>

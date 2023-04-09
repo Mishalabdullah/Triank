@@ -1,0 +1,20 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.10;
+
+contract myBank{
+    mapping (address => uint) private  balences;
+
+    function deposite() external  payable {
+        balences[msg.sender] += msg.value;
+
+    }
+    function withdraw(address payable  addr ,uint amount )  public payable {
+        require(balences[addr] >= amount);
+        (bool sent, bytes memory data) = addr.call{value:amount}("");
+        require(sent,"Error");
+        balences[msg.sender] -= amount;
+    }
+    function getBalance() public  view returns(uint){
+        return address(this).balance;
+    }
+ }

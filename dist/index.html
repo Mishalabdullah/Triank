@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="/output.css" rel="stylesheet" />
+    <title>Web 3 Bank</title>
+  </head>
+  <body class="bg-slate-800 justify-self-center">
+    <div>
+      <div class="flex mt-20 justify-center content-center">
+        <button
+          onclick="getBalance()"
+          class="text-white bg-black p-5 rounded-lg m-5 w-50"
+        >
+          Get Balance
+        </button>
+        <button
+          onclick="deposite()"
+          class="text-white bg-black p-5 rounded-lg m-5 w-50"
+        >
+          Deposite
+        </button>
+        <button onclick="withdraw()"class="text-white bg-black p-5 rounded-lg m-5 w-50">
+          Withdraw
+        </button>
+      </div>
+      <div>
+        <label for="fund">Eth Amount</label>
+        <input id="ethAmount" placeholder="0.1ETH"></input><br>
+        <label for="EthAddress">ethereum Address </label>
+        <input id ="ethaddress" placeholder ="0x..........."></input>
+      </div>
+    </div>
+  </body>
+  <script
+    src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"
+    type="application/javascript"
+  ></script>
+  <script>
+    window.ethereum.enable();
+    const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+
+    var contractAdrress ="0xbF7fa9D472a49F1DF7E269Cd637d3AE98aF7847d";
+    var contractAbi = [
+	{
+		"inputs": [],
+		"name": "fund",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address payable",
+				"name": "addr",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "withdraw",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getBalance",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+];
+    var myBank;
+    var signer;
+    provider.listAccounts().then(function (accounts) {
+      signer = provider.getSigner(accounts[0]);
+      myBank = new ethers.Contract(contractAdrress, contractAbi, signer);
+    });
+    async function getBalance() {
+      getBalanceMoney = myBank.getBalance();
+      var Balance = await getBalanceMoney;
+      var fBalance = ethers.utils.formatEther(Balance);
+      alert("Money Left In The Contract is :- " + fBalance + " ethers");
+    }
+    async function deposite() {
+      const ethAmount = document.getElementById("ethAmount").value
+      const inputEthAmount = myBank.fund({value : ethers.utils.parseEther(ethAmount)});
+      await inputEthAmount;
+    }
+
+  </script>
+</html>

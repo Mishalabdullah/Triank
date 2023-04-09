@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "tailwind": "^4.0.0"
+  },
+  "dependencies": {
+    "ether": "^0.0.9",
+    "ethers": "^6.2.3"
+  }
+}
